@@ -109,11 +109,16 @@ def save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen
 
 
 root = tk.Tk()
-root.title("Table to JSON Converter")
+root.title("Orbit - Market Segmentation Module")
 root.geometry("800x600")
 
-text_input = scrolledtext.ScrolledText(root, height=20, width=75)  # Corrected use of scrolledtext
-text_input.pack(pady=20)
+# Label instructing the user where to paste the market segmentation output
+label = tk.Label(root, text="Paste market segmentation output here:", font=("Arial", 12))
+label.pack(pady=(10,0)) # Adjust vertical spacing as needed
+
+# Adjusted the height of the text input to leave space for the label above
+text_input = scrolledtext.ScrolledText(root, height=18, width=75)
+text_input.pack(pady=10)
 
 preview_btn = tk.Button(root, text="Preview Data", command=on_preview)
 preview_btn.pack(pady=5)
