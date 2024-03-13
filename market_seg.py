@@ -16,20 +16,18 @@ def ts_to_gen(ts, pow_val=1.0002, base_ts=1675084800, div_val=3300):
 
 
 def parse_markdown_sections(text):
-    intro, segments_md, table_md = text.partition('### Market Segments:')[0], \
-        text.partition('### Market Segments:')[2].partition('### Market Segmentation Table:')[0], \
-        text.partition('### Market Segmentation Table:')[2]
-    segments_list = segments_md.strip().split('\n')[1:]  # Clean up segment list
-    return intro.strip(), segments_list, table_md.strip()
+    intro, rest = text.split('### Market Segments:', 1)
+    segments_md, rest = rest.split('### Market Segmentation Table:', 1)
+    table_md, ending_note = rest.rsplit('\n\n', 1)
+    segments_list = segments_md.strip().split('\n')
+    return intro.strip(), segments_list, table_md.strip(), ending_note.strip()
 
 
 def markdown_table_to_df(table_md):
-    # Extract and clean the table rows
     lines = table_md.split('\n')[2:]  # Skip the header and delimiter
     header = table_md.split('\n')[0]  # Header row
     header_cols = [col.strip() for col in header.split('|') if col]  # Clean column names
 
-    # Convert markdown to DataFrame
     data = []
     for line in lines:
         row_data = [cell.strip() for cell in line.split('|') if cell]  # Clean row cells
@@ -40,8 +38,7 @@ def markdown_table_to_df(table_md):
     return df
 
 
-def show_table_with_matplotlib(df):
-    # Configure popup window
+def show_table_with_matplotlib(df, intro, segments, ending_note):
     popup = Toplevel(root)
     popup.title("Table Preview")
 
@@ -49,10 +46,19 @@ def show_table_with_matplotlib(df):
     ax.axis('off')
     ax.axis('tight')
 
-    table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='center')
+    # Place the intro and segments above the table
+    intro_text = intro + '\n\n' + '\n'.join(segments)
+    ax.text(0, 1, intro_text, fontsize=10, va='top', ha='left')
+
+    # Display the table with cell text wrapping
+    table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='left',
+                     colWidths=[0.1] * len(df.columns))
     table.auto_set_font_size(False)
-    table.set_fontsize(12)
-    table.scale(1, 1.5)
+    table.set_fontsize(10)
+    table.scale(1, 2)  # Adjust vertical scaling for text wrapping
+
+    # Place the ending note below the table
+    ax.text(0, -0.5, ending_note, fontsize=10, va='top', ha='left', wrap=True)
 
     canvas = FigureCanvasTkAgg(fig, master=popup)
     canvas.draw()
@@ -61,25 +67,25 @@ def show_table_with_matplotlib(df):
 
 def on_preview():
     text = text_input.get("1.0", "end-1c")
-    intro, segments, table_md = parse_markdown_sections(text)
-    df = markdown_table_to_df(table_md)  # Convert markdown table to dataframe for preview
-    show_table_with_matplotlib(df)  # Display table in a popup window
+    intro, segments, table_md, ending_note = parse_markdown_sections(text)
+    df = markdown_table_to_df(table_md)
+    show_table_with_matplotlib(df, intro, segments, ending_note)
 
 
 def on_save():
     text = text_input.get("1.0", "end-1c")
-    intro, segments, table_md = parse_markdown_sections(text)
-    df = markdown_table_to_df(table_md)  # Convert markdown table to dataframe for saving
+    intro, segments, table_md, ending_note = parse_markdown_sections(text)
+    df = markdown_table_to_df(table_md)
     subdir = simpledialog.askstring("Input", "Enter directory name for saving:")
     if subdir:
         timestamp = time.time()
         gen_number = ts_to_gen(timestamp)
         filename = f"{gen_number}_project_mar_seg.json"
-        table_data = df.to_dict(orient='records')  # Convert dataframe to dictionary for JSON
-        save_to_json(intro, segments, table_data, subdir, filename, gen_number)
+        table_data = df.to_dict(orient='records')
+        save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen_number)
 
 
-def save_to_json(intro, segments, table_data, subdir, filename, gen_number):
+def save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen_number):
     if not os.path.exists(subdir):
         os.makedirs(subdir)
     filepath = os.path.join(subdir, filename)
@@ -87,14 +93,14 @@ def save_to_json(intro, segments, table_data, subdir, filename, gen_number):
         'mit.orbit.gen.ms': gen_number,
         'Introduction': intro,
         'Market Segments': segments,
-        'Market Segmentation Table': table_data
+        'Market Segmentation Table': table_data,
+        'Ending Note': ending_note
     }
     with open(filepath, 'w') as file:
         json.dump(combined_data, file, indent=4)
     messagebox.showinfo("Success", f"Data saved to {filepath}")
 
 
-# Tkinter GUI setup
 root = tk.Tk()
 root.title("Table to JSON Converter")
 root.geometry("800x600")
