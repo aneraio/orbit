@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox, Toplevel
-from tkinter.scrolledtext import ScrolledText
+import tkinter.scrolledtext as scrolledtext  # Adjusted import for clarity
 import os
 import json
 import time
@@ -8,12 +8,11 @@ from io import StringIO
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
+import textwrap
 
 def ts_to_gen(ts, pow_val=1.0002, base_ts=1675084800, div_val=3300):
     gen = pow(pow_val, (float(ts) - base_ts) / div_val)
     return f"{gen:.10f}".replace(".", "_")
-
 
 def parse_markdown_sections(text):
     intro, rest = text.split('### Market Segments:', 1)
@@ -21,7 +20,6 @@ def parse_markdown_sections(text):
     table_md, ending_note = rest.rsplit('\n\n', 1)
     segments_list = segments_md.strip().split('\n')
     return intro.strip(), segments_list, table_md.strip(), ending_note.strip()
-
 
 def markdown_table_to_df(table_md):
     lines = table_md.split('\n')[2:]  # Skip the header and delimiter
@@ -37,7 +35,6 @@ def markdown_table_to_df(table_md):
     df = pd.DataFrame(data, columns=header_cols)
     return df
 
-
 def show_table_with_matplotlib(df, intro, segments, ending_note):
     popup = Toplevel(root)
     popup.title("Table Preview")
@@ -46,31 +43,25 @@ def show_table_with_matplotlib(df, intro, segments, ending_note):
     ax.axis('off')
     ax.axis('tight')
 
-    # Place the intro and segments above the table
     intro_text = intro + '\n\n' + '\n'.join(segments)
     ax.text(0, 1, intro_text, fontsize=10, va='top', ha='left')
 
-    # Display the table with cell text wrapping
-    table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='left',
-                     colWidths=[0.1] * len(df.columns))
+    table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='left', colWidths=[0.1] * len(df.columns))
     table.auto_set_font_size(False)
     table.set_fontsize(10)
-    table.scale(1, 2)  # Adjust vertical scaling for text wrapping
+    table.scale(1, 2)
 
-    # Place the ending note below the table
     ax.text(0, -0.5, ending_note, fontsize=10, va='top', ha='left', wrap=True)
 
     canvas = FigureCanvasTkAgg(fig, master=popup)
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-
 def on_preview():
     text = text_input.get("1.0", "end-1c")
     intro, segments, table_md, ending_note = parse_markdown_sections(text)
     df = markdown_table_to_df(table_md)
     show_table_with_matplotlib(df, intro, segments, ending_note)
-
 
 def on_save():
     text = text_input.get("1.0", "end-1c")
@@ -83,7 +74,6 @@ def on_save():
         filename = f"{gen_number}_project_mar_seg.json"
         table_data = df.to_dict(orient='records')
         save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen_number)
-
 
 def save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen_number):
     if not os.path.exists(subdir):
@@ -100,12 +90,11 @@ def save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen
         json.dump(combined_data, file, indent=4)
     messagebox.showinfo("Success", f"Data saved to {filepath}")
 
-
 root = tk.Tk()
 root.title("Table to JSON Converter")
 root.geometry("800x600")
 
-text_input = ScrolledText(root, height=20, width=75)
+text_input = scrolledtext.ScrolledText(root, height=20, width=75)  # Corrected use of scrolledtext
 text_input.pack(pady=20)
 
 preview_btn = tk.Button(root, text="Preview Data", command=on_preview)
