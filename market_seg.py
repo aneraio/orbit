@@ -75,10 +75,23 @@ def on_save():
         table_data = df.to_dict(orient='records')
         save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen_number)
 
+
+
 def save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen_number):
-    if not os.path.exists(subdir):
-        os.makedirs(subdir)
-    filepath = os.path.join(subdir, filename)
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Assuming the script is in the root of your project, adjust the path as needed
+    # For example, if your script is inside a 'src' folder, use os.path.join(script_dir, '..', subdir)
+    full_subdir_path = os.path.join(script_dir, subdir)
+
+    # Check if the subdir exists, if not, create it
+    if not os.path.exists(full_subdir_path):
+        os.makedirs(full_subdir_path)
+
+    # Combine the subdir path with the filename to get the full path to save the file
+    filepath = os.path.join(full_subdir_path, filename)
+
     combined_data = {
         'mit.orbit.gen.ms': gen_number,
         'Introduction': intro,
@@ -86,9 +99,14 @@ def save_to_json(intro, segments, table_data, ending_note, subdir, filename, gen
         'Market Segmentation Table': table_data,
         'Ending Note': ending_note
     }
+
+    # Save the combined data to the specified JSON file
     with open(filepath, 'w') as file:
         json.dump(combined_data, file, indent=4)
+
+    # Notify the user that the data was saved successfully
     messagebox.showinfo("Success", f"Data saved to {filepath}")
+
 
 root = tk.Tk()
 root.title("Table to JSON Converter")
