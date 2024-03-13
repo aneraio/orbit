@@ -14,12 +14,41 @@ def ts_to_gen(ts, pow_val=1.0002, base_ts=1675084800, div_val=3300):
     gen = pow(pow_val, (float(ts) - base_ts) / div_val)
     return f"{gen:.10f}".replace(".", "_")
 
+
 def parse_markdown_sections(text):
-    intro, rest = text.split('### Market Segments:', 1)
-    segments_md, rest = rest.split('### Market Segmentation Table:', 1)
-    table_md, ending_note = rest.rsplit('\n\n', 1)
-    segments_list = segments_md.strip().split('\n')
-    return intro.strip(), segments_list, table_md.strip(), ending_note.strip()
+    # Initial split by '###' to get preliminary sections
+    sections = text.split('###')
+
+    # Handling pre-segment intro text if exists before the first '###'
+    pre_segment_intro = sections[0].strip()
+
+    # Variables to hold content of different sections
+    intro = ""
+    segments_list = []
+    table_md = ""
+    ending_note = ""
+
+    for section in sections[1:]:
+        if ':' in section:
+            header, content = section.split(':', 1)
+        else:
+            header, content = section, ""
+        header = header.strip()
+        content = content.strip()
+
+        if header == 'Market Segments':
+            intro = pre_segment_intro  # Assuming the pre-segment intro is relevant to the introduction
+            segments_list = [seg.strip() for seg in content.split('\n') if seg.strip()]
+        elif header in ['Market Segmentation Table', 'Market Segmentation Matrix']:
+            table_md = content
+        elif 'Note' in header:  # Capturing ending notes based on 'Note' in the header
+            ending_note += content + '\n\n'
+
+    # Ensure that ending_note does not have trailing new lines
+    ending_note = ending_note.strip()
+
+    return intro, segments_list, table_md, ending_note
+
 
 def markdown_table_to_df(table_md):
     lines = table_md.split('\n')[2:]  # Skip the header and delimiter

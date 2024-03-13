@@ -1,0 +1,103 @@
+{
+    "Title": "smart bookstore and cafe,",
+    "Headers": [
+        "College Students",
+        "Remote Workers",
+        "Local Residents",
+        "Tourists",
+        ""
+    ],
+    "Criteria Data": [
+        {
+            "1. Economically Attractive": [
+                "Rating: High \n Explanation: College students seek spaces for studying and socializing, often willing to spend on coffee and snacks.",
+                "Rating: Very High \n Explanation: Remote workers look for comfortable workspaces with amenities, likely to spend more on food and beverages for longer stays.",
+                "Rating: Medium \n Explanation: Spending habits vary; some may be regulars, while others might visit infrequently.",
+                "Rating: High \n Explanation: Tourists seek unique local experiences and are willing to spend on food and souvenirs.",
+                ""
+            ]
+        },
+        {
+            "2. Accessible to Our Sales Force": [
+                "Rating: High \n Explanation: Easy to reach through campus advertising and partnerships with universities.",
+                "Rating: Medium \n Explanation: Can be targeted through online platforms and coworking networks.",
+                "Rating: Very High \n Explanation: Local marketing and community events can effectively reach this segment.",
+                "Rating: Medium \n Explanation: Depends on the bookstore's location and tourist traffic; partnerships with hotels and tourist sites can help.",
+                ""
+            ]
+        },
+        {
+            "3. Strong Value Proposition": [
+                "Rating: Very High \n Explanation: Offers a conducive environment for studying and relaxation, meeting their social and academic needs.",
+                "Rating: High \n Explanation: Provides a reliable workspace with the comfort of a cafe, addressing the need for a change of scenery from home.",
+                "Rating: High \n Explanation: Serves as a community hub for leisure and learning, appealing to families and individuals alike.",
+                "Rating: High \n Explanation: Unique local experience combining culture and comfort, appealing to those looking for more than just sightseeing.",
+                ""
+            ]
+        },
+        {
+            "4. Complete Product": [
+                "Rating: High \n Explanation: Product mix of books and cafe tailored to student preferences can be easily assembled.",
+                "Rating: Medium \n Explanation: Requires a careful balance of workspace amenities and cafe offerings to meet expectations.",
+                "Rating: High \n Explanation: A diverse selection of books and cafe items can cater to varied local interests.",
+                "Rating: Medium \n Explanation: Needs a curated selection highlighting local culture alongside general offerings.",
+                ""
+            ]
+        },
+        {
+            "5. Competition": [
+                "Rating: High \n Explanation: Faces competition from campus libraries and other cafes but can differentiate with unique offerings.",
+                "Rating: Very High \n Explanation: Competes with coworking spaces and cafes; unique value proposition is key.",
+                "Rating: Medium \n Explanation: Local competition varies; can stand out with community engagement and unique ambiance.",
+                "Rating: High \n Explanation: Many tourist spots have similar offerings; uniqueness and quality are essential.",
+                ""
+            ]
+        },
+        {
+            "6. Strategic Value": [
+                "Rating: High \n Explanation: Building loyalty with students can ensure steady business throughout the academic year.",
+                "Rating: High \n Explanation: Attracting remote workers can lead to regular, high-spending customers.",
+                "Rating: Very High \n Explanation: Engaging local residents builds a loyal customer base and community presence.",
+                "Rating: Medium \n Explanation: While profitable, tourists are less likely to be repeat customers.",
+                ""
+            ]
+        },
+        {
+            "7. Personal Alignment": [
+                "Rating: High \n Explanation: Aligns with values of education and community building.",
+                "Rating: High \n Explanation: Supports the modern workforce and entrepreneurship.",
+                "Rating: Very Highbr> Explanation: Enhances local community life and supports local economy.",
+                "Rating: High \n Explanation: Promotes cultural exchange and enriches tourist experiences.",
+                ""
+            ]
+        },
+        {
+            "Overall Rating": [
+                "High",
+                "High",
+                "Very High",
+                "High",
+                ""
+            ]
+        },
+        {
+            "Ranking": [
+                "2",
+                "3",
+                "1",
+                "4",
+                ""
+            ]
+        },
+        {
+            "Key Deciding Factors": [
+                "Strong demand for study spaces; high campus visibility.",
+                "Need for unique selling points to attract over coworking spaces.",
+                "Strong community ties and regular patronage.",
+                "Seasonal demand and reliance on tourist foot traffic.",
+                ""
+            ]
+        }
+    ],
+    "mit.orbit.gen.bh": "8_4620371506"
+}
